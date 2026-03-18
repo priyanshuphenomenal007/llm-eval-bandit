@@ -11,6 +11,6 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Results (generated artifacts)
-results/*
-!results/.gitkeep
+# Results (keep useful artifacts, ignore heavy/raw files)
+results/*.npy
+results/*.npz
