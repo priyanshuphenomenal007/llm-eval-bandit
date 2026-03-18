@@ -6,7 +6,9 @@ Evaluating large language models is inefficient.
 
 Most evaluation pipelines rely on static test sets or uniform sampling, allocating equal effort across all prompt categories. This leads to wasted evaluation budget, slow failure discovery, and poor coverage of model weaknesses.
 
-This project treats LLM evaluation as a **resource allocation problem**.
+This work frames LLM evaluation as a **resource allocation problem**.
+
+This repository implements the evaluation strategy layer, not a full LLM evaluation pipeline.
 
 Instead of uniformly sampling prompts, it dynamically prioritizes high-risk regions using multi-armed bandit strategies, improving failure discovery efficiency under fixed evaluation budgets.
 
@@ -52,7 +54,9 @@ Both are evaluated under identical stochastic conditions.
 
 ## Results
 
-Epsilon-Greedy (decaying) significantly outperforms UCB1.
+![Final Regret Distribution](results/regret_distribution.png)
+
+Decaying ε-Greedy significantly outperforms UCB1 under identical conditions.
 
 - UCB1 final regret: ~104.4  
 - Epsilon-Greedy final regret: ~12.4  
@@ -122,7 +126,7 @@ python -m scripts.plot_results
 
 ## Outputs
 
-> **Note:** Results are not committed to the repository and are generated via scripts for reproducibility.
+> **Note:** > Example outputs (plots and summary CSV) are included for reference. Full results can be reproduced using the provided scripts.
 
 Results are stored in:
 `results/`
