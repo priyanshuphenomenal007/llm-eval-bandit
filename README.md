@@ -2,15 +2,17 @@
 
 ## Overview
 
-Evaluating large language models is inefficient.
+LLM evaluation pipelines are inefficient because they allocate testing effort uniformly across prompt categories, regardless of where failures actually occur.
 
 Most evaluation pipelines rely on static test sets or uniform sampling, allocating equal effort across all prompt categories. This leads to wasted evaluation budget, slow failure discovery, and poor coverage of model weaknesses.
 
 This work frames LLM evaluation as a **resource allocation problem**.
 
-This repository implements the evaluation strategy layer, not a full LLM evaluation pipeline.
+> This repository implements the **evaluation strategy layer**, not a full LLM evaluation pipeline.
 
 Instead of uniformly sampling prompts, it dynamically prioritizes high-risk regions using multi-armed bandit strategies, improving failure discovery efficiency under fixed evaluation budgets.
+
+This work focuses on the evaluation strategy component, decoupled from prompt generation, model execution, and scoring infrastructure.
 
 ---
 
@@ -33,7 +35,7 @@ We model evaluation as a multi-armed bandit problem:
 - **UCB1 (Upper Confidence Bound)**
 - **Epsilon-Greedy (decaying exploration)**
 
-Both are evaluated under identical stochastic conditions.
+Both algorithms are evaluated under identical stochastic conditions.
 
 ---
 
@@ -62,13 +64,15 @@ Decaying ε-Greedy significantly outperforms UCB1 under identical conditions.
 - Epsilon-Greedy final regret: ~12.4  
 - p-value (paired t-test): ~0.00116  
 
-This indicates a consistent and repeatable performance advantage of decaying exploration in this setting.
+This indicates a consistent and repeatable performance advantage of adaptive exploration, resulting in ~8× lower regret and faster identification of model weaknesses.
 
 ---
 
 ## Key Insight
 
-Adaptive exploration concentrates evaluation effort on failure-prone regions, improving sample efficiency relative to uniform or confidence-bound strategies.
+Evaluation should not treat all prompts equally.
+
+Adaptive strategies concentrate evaluation effort on failure-prone regions, improving sample efficiency without increasing total evaluation volume.
 
 This reframes LLM evaluation as a resource allocation problem, where evaluation budget is dynamically directed toward high-risk regions instead of uniformly distributed.
 
@@ -162,11 +166,19 @@ This implementation serves as a controlled baseline for evaluating adaptive samp
 
 ## Why This Matters
 
-Evaluation cost is a primary bottleneck in production LLM systems. This work demonstrates that **adaptive allocation strategies** can significantly improve failure discovery efficiency without increasing total evaluation volume. This is directly applicable to:
+Evaluation cost is a bottleneck in production LLM systems.
 
-* **Model Auditing:** Identifying edge cases efficiently.
-* **Safety Evaluation:** Stress-testing guardrails.
-* **Continuous Eval:** Reducing overhead in CI/CD pipelines.
+This approach enables:
+
+- Faster discovery of model failures  
+- More efficient safety and robustness testing  
+- Reduced evaluation overhead in continuous deployment pipelines  
+
+It can serve as a **drop-in strategy layer** for:
+
+- Model auditing pipelines  
+- Safety evaluation workflows  
+- Continuous evaluation systems  
 
 ---
 
